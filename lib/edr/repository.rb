@@ -2,35 +2,25 @@ require_relative 'registry'
 
 module Edr
   module Repository
-    def persist model
-      persisted_data = data(model).save(:raise_on_failure => true)
-      return nil unless persisted_data
-
-      model.id = persisted_data.id
-      model
-    end
-
     def delete model
-      data(model).destroy
+      data_class.destroy data(model)
     end
 
     def delete_by_id id
-      data_class[id].destroy
+      data_class.destroy(data_class.get!(id))
     end
 
     def find id
-      model_class.new(data_class[id])
+      model_class.new(data_class.get!(id))
     end
 
     def all
-      data_class.all.map do |data|
+      data_class.find_all.map do |data|
         model_class.new(data)
       end
     end
 
-    def count
-      data_class.count
-    end
+    protected
 
     def data model
       model._data
@@ -39,11 +29,11 @@ module Edr
     def set_model_class model_class, options
       if options[:root]
         singleton_class.send :define_method, :data_class do
-          Registry.data_class_for model_class
+          Registry.data_class_for(model_class).to_adapter
         end
 
         singleton_class.send :define_method, :model_class do
-          model_class.constantize
+          model_class
         end
       end
     end
@@ -51,7 +41,7 @@ module Edr
     private
 
     def where attrs
-      data_class.where(attrs).map do |data|
+      data_class.find_all(attrs).map do |data|
         model_class.new(data)
       end
     end

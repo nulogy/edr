@@ -4,7 +4,7 @@ module Edr
   module Model
     def self.included(base)
       base.extend ClassMethods
-      base.extend Forwardable
+      base.extend ::Forwardable
     end
 
     attr_accessor :_data

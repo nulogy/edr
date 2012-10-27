@@ -26,17 +26,17 @@ module Edr
     end
 
     def data_class_for model_class
-      data_class = @model_to_data_map[model_class.to_s]
+      data_class = @model_to_data_map[model_class]
       return OpenStruct unless data_class
 
-      data_class.constantize
+      data_class
     end
 
     def model_class_for data_class
-      model_class = @data_to_model_map[data_class.to_s]
+      model_class = @data_to_model_map[data_class]
       raise "No model class for #{data_class.to_s}" unless model_class
 
-      model_class.constantize
+      model_class
     end
 
     private
