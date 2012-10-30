@@ -26,15 +26,13 @@ module Edr
       model._data
     end
 
-    def set_model_class model_class, options
-      if options[:root]
-        singleton_class.send :define_method, :data_class do
-          Registry.data_class_for(model_class).to_adapter
-        end
+    def set_model_class model_class
+      singleton_class.send :define_method, :data_class do
+        Registry.data_class_for(model_class).to_adapter
+      end
 
-        singleton_class.send :define_method, :model_class do
-          model_class
-        end
+      singleton_class.send :define_method, :model_class do
+        model_class
       end
     end
 

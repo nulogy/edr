@@ -78,7 +78,7 @@ end
 module OrderRepository
   extend Edr::AR::Repository
 
-  set_model_class Order, root: true
+  set_model_class Order
 
   def self.find_by_amount amount
     where(amount: amount).map do |data|
