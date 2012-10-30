@@ -29,6 +29,23 @@ describe Edr::Repository do
     end
   end
 
+  describe "Creating objects through the repository variable" do
+    let(:order) do
+      order = Order.new(amount: 10)
+      OrderRepository.persist order
+      order
+    end
+
+    example do
+      order.add_item_through_repository name: 'item', amount: 10
+      order.items.first.name.should == 'item'
+    end
+
+    it "raises an exception when the root is not persisted" do
+      ->{Order.new(amount: 10).add_item_through_repository({})}.should raise_error
+    end
+  end
+
   describe "Selecting models" do
     let!(:data){OrderData.create! amount: 10, deliver_at: Date.today}
 

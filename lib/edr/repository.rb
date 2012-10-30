@@ -11,16 +11,22 @@ module Edr
     end
 
     def find id
-      model_class.new(data_class.get!(id))
+      wrap(data_class.get!(id))
     end
 
     def all
       data_class.find_all.map do |data|
-        model_class.new(data)
+        wrap(data)
       end
     end
 
     protected
+
+    def wrap data
+      model_class.new(data).tap do |m|
+        m.send(:repository=, self)
+      end
+    end
 
     def data model
       model._data
@@ -40,7 +46,7 @@ module Edr
 
     def where attrs
       data_class.find_all(attrs).map do |data|
-        model_class.new(data)
+        wrap(data)
       end
     end
   end

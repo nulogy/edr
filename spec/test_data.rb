@@ -49,17 +49,21 @@ class Order
   include Edr::Model
 
   fields :id, :amount, :deliver_at
-  associations :items
+  wrap_associations :items
 
   def add_item attrs
     wrap association(:items).new(attrs)
+  end
+
+  def add_item_through_repository attrs
+    repository.create_item self, attrs
   end
 end
 
 class Item
   include Edr::Model
 
-  fields :id, :name, :amount
+  fields :id, :name, :amount, :order_id
 end
 
 
@@ -86,6 +90,23 @@ module OrderRepository
 
   def self.find_by_id id
     where(id: id).first
+  end
+
+  def self.create_item order, attrs
+    item = ItemRepository.create_item(order, attrs)
+    data(order).reload
+    return item
+  end
+
+  module ItemRepository
+    extend Edr::AR::Repository
+    set_model_class Item
+
+    def self.create_item order, attrs
+      item = Item.new(attrs)
+      item.order_id = order.id
+      persist item
+    end
   end
 end
 

@@ -29,6 +29,15 @@ module Edr
 
     protected
 
+    def repository
+      raise "Transient objects don't have repositories" unless @repository
+      @repository
+    end
+
+    def repository= repo
+      @repository = repo
+    end
+
     def association name
       _data.send(name)
     end
@@ -56,7 +65,7 @@ module Edr
         end
       end
 
-      def associations *association_names
+      def wrap_associations *association_names
         association_names.each do |association_name|
           define_method association_name do
             wrap(association association_name)
