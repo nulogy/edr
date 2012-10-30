@@ -81,15 +81,11 @@ module OrderRepository
   set_model_class Order
 
   def self.find_by_amount amount
-    where(amount: amount).map do |data|
-      Order.new data
-    end
+    where(amount: amount)
   end
 
   def self.find_by_id id
-    where(id: id).map do |data|
-      Order.new data
-    end.first
+    where(id: id).first
   end
 end
 
