@@ -49,17 +49,17 @@ class Order
   include Edr::Model
 
   fields :id, :amount, :deliver_at
-  collections :items
+  associations :items
 
   def add_item attrs
-    collection(:items).new attrs
+    wrap association(:items).new(attrs)
   end
 end
 
 class Item
   include Edr::Model
 
-  fields :id, :amount
+  fields :id, :name, :amount
 end
 
 

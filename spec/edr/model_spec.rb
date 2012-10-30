@@ -27,6 +27,13 @@ describe Edr::Model do
 
       order.amount.should == 15
     end
+
+    it "creating an aggregate with children" do
+      order = Order.new
+      item = order.add_item name: 'item1', amount: 10
+
+      item.name.should == 'item1'
+    end
   end
 
   describe "Using data structure instead of a data object" do
