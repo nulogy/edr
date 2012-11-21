@@ -23,22 +23,15 @@ describe Edr::Model do
     end
 
     it "uses hash to initialize fields" do
-      order = Order.new amount: 15
+      order = Order.build amount: 15
 
       order.amount.should == 15
-    end
-
-    it "creating an aggregate with children" do
-      order = Order.new
-      item = order.add_item name: 'item1', amount: 10
-
-      item.name.should == 'item1'
     end
   end
 
   describe "Using data structure instead of a data object" do
     example do
-      order = Order.new OpenStruct.new
+      order = Order.build OpenStruct.new
       order.amount = 99
       order.amount.should == 99
     end

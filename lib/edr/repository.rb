@@ -23,7 +23,8 @@ module Edr
     protected
 
     def wrap data
-      model_class.new(data).tap do |m|
+      model_class.new.tap do |m|
+        m.send(:_data=, data)
         m.send(:repository=, self)
       end
     end

@@ -4,7 +4,7 @@ require_relative '../test_data'
 describe Edr::Repository do
   describe "Persisting objects" do
     example do
-      order = Order.new amount: 10
+      order = Order.build amount: 10
 
       OrderRepository.persist order
 
@@ -12,18 +12,8 @@ describe Edr::Repository do
       order.amount.should == 10
     end
 
-    it "persists an aggregate with children" do
-      order = Order.new amount: 10
-      order.add_item name: 'item1', amount: 5
-
-      OrderRepository.persist order
-
-      from_db = OrderRepository.find(order.id)
-      from_db.items.first.amount.should == 5
-    end
-
     it "raises an exception when invalid data" do
-      order = Order.new amount: "invalid"
+      order = Order.build amount: "invalid"
 
       ->{OrderRepository.persist order}.should raise_error
     end
@@ -31,13 +21,13 @@ describe Edr::Repository do
 
   describe "Creating objects through the repository variable" do
     let(:order) do
-      order = Order.new(amount: 10)
+      order = Order.build(amount: 10)
       OrderRepository.persist order
       order
     end
 
     example do
-      order.add_item_through_repository name: 'item', amount: 10
+      order.add_item name: 'item', amount: 10
       order.items.first.name.should == 'item'
     end
 
@@ -71,7 +61,7 @@ describe Edr::Repository do
 
   describe "Deleting models" do
     let!(:order) do
-      order = Order.new amount: 10, deliver_at: Date.today
+      order = Order.build amount: 10, deliver_at: Date.today
       OrderRepository.persist order
       order
     end

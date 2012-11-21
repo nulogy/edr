@@ -7,7 +7,7 @@ Gem::Specification.new do |gem|
   gem.name          = "edr"
   gem.version       = Edr::VERSION
   gem.authors       = ["Victor Savkin", "Matt Briggs", "Clemens Park", "Justin Fitzsimmons"]
-  gem.email         = ["vsavkin@nulogy.com", "mbriggs@nulocy.com", "clemensp@nulogy.com", "justinf@nulogy.com"]
+  gem.email         = ["vsavkin@nulogy.com", "matt@mattbriggs.net", "clemensp@nulogy.com", "justinf@nulogy.com"]
   gem.description   = %q{Entity Data-object Repository framework}
   gem.summary       = %q{Separate persistence from the domain model.}
   gem.homepage      = ""

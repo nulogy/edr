@@ -7,15 +7,7 @@ module Edr
       base.extend ::Forwardable
     end
 
-    attr_accessor :_data
-
-    def initialize _data = _new_instance
-      if _data.kind_of?(Hash)
-        @_data = _new_instance _data
-      else
-        @_data = _data
-      end
-    end
+    attr_writer :_data
 
     def mass_assign(attributes)
       attributes.each do |k, v|
@@ -25,6 +17,10 @@ module Edr
 
     def as_json(options={})
       _data.as_json(options)
+    end
+
+    def _data
+      @_data ||= self.class._new_instance
     end
 
     protected
@@ -49,15 +45,24 @@ module Edr
       else
         return nil if association.nil?
         model_class = Registry.model_class_for(association.class)
-        model_class.new association
+        model_class.build association
       end
     end
 
-    def _new_instance hash = {}
-      Registry.data_class_for(self.class).new hash
-    end
 
     module ClassMethods
+      def build(data = _new_instance)
+        instance = new
+
+        if data.kind_of?(Hash)
+          instance._data =  _new_instance(data)
+        else
+          instance._data = data
+        end
+
+        return instance
+      end
+
       def fields *field_names
         field_names.each do |field_name|
           def_delegators :_data, field_name
@@ -71,6 +76,10 @@ module Edr
             wrap(association association_name)
           end
         end
+      end
+
+      def _new_instance hash = {}
+        Registry.data_class_for(self).new hash
       end
     end
   end

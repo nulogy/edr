@@ -52,10 +52,6 @@ class Order
   wrap_associations :items
 
   def add_item attrs
-    wrap association(:items).new(attrs)
-  end
-
-  def add_item_through_repository attrs
     repository.create_item self, attrs
   end
 end
@@ -103,7 +99,7 @@ module OrderRepository
     set_model_class Item
 
     def self.create_item order, attrs
-      item = Item.new(attrs)
+      item = Item.build(attrs)
       item.order_id = order.id
       persist item
     end
