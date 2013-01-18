@@ -1,6 +1,6 @@
 # Edr
 
-TODO: Write a gem description
+Blog post describing EDR: ["Building Rich Domain Models in Rails. Separating Persistence"](http://engineering.nulogy.com/posts/building-rich-domain-models-in-rails-separating-persistence).
 
 ## Installation
 
@@ -16,14 +16,3 @@ Or install it yourself as:
 
     $ gem install edr
 
-## Usage
-
-TODO: Write usage instructions here
-
-## Contributing
-
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
