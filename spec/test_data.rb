@@ -46,20 +46,9 @@ end
 # STEP2: Define domain objects
 # --------------------------------------------------
 class Order
-  include Edr::Model
-
-  fields :id, :amount, :deliver_at
-  wrap_associations :items
-
-  def add_item attrs
-    repository.create_item self, attrs
-  end
 end
 
 class Item
-  include Edr::Model
-
-  fields :id, :name, :amount, :order_id
 end
 
 
@@ -67,8 +56,9 @@ end
 # STEP3: map data objects to domain objects
 # --------------------------------------------------
 Edr::Registry.define do
-  map Order, OrderData
-  map Item, ItemData
+#  NOTE: Below should be implicit by naming convention
+#  map Order, OrderData
+#  map Item, ItemData
 end
 
 
