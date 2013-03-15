@@ -6,4 +6,4 @@ require_relative 'edr/repository'
 require_relative 'edr/model'
 
 require_relative 'edr/ar/data_validator'
-require_relative 'edr/ar/repository'
+

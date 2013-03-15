@@ -64,7 +64,7 @@ Edr::Registry.map_models_to_mappers
 # STEP4: Define repository to access data
 # --------------------------------------------------
 module OrderRepository
-  extend Edr::AR::Repository
+  extend Edr::Repository
 
   set_model_class Order
 
@@ -83,7 +83,7 @@ module OrderRepository
   end
 
   module ItemRepository
-    extend Edr::AR::Repository
+    extend Edr::Repository
     set_model_class Item
 
     def self.create_item order, attrs
