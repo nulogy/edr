@@ -3,23 +3,33 @@ require_relative 'registry'
 module Edr
   module Repository
     def delete model
-      data_class.destroy data(model)
+      data(model).destroy
     end
 
     def delete_by_id id
-      data_class.destroy(data_class.get!(id))
+      data_class.find(id).destroy
     end
 
     def find id
-      wrap(data_class.get!(id))
+      wrap(data_class.find(id))
     end
 
     def all
-      data_class.find_all.map do |data|
+      data_class.all.map do |data|
         wrap(data)
       end
     end
 
+    def persist model
+      data_object = data(model)
+      data_object.save!
+      
+      model.id = data_object.id
+      model.send(:repository=, self)
+      
+      model
+    end
+    
     protected
 
     def wrap data
@@ -35,7 +45,7 @@ module Edr
 
     def set_model_class model_class
       singleton_class.send :define_method, :data_class do
-        Registry.data_class_for(model_class).to_adapter
+        Registry.data_class_for(model_class)
       end
 
       singleton_class.send :define_method, :model_class do
@@ -46,7 +56,7 @@ module Edr
     private
 
     def where attrs
-      data_class.find_all(attrs).map do |data|
+      data_class.where(attrs).map do |data|
         wrap(data)
       end
     end
