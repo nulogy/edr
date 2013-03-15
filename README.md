@@ -62,9 +62,6 @@ end
 
 Fields and associations on the Domain Model are determined via ActiveRecord reflection.  The Domain Model is coupled to its ActiveRecord class by naming convention.
 
-Domain Model classes should share the same name as the AR classes except they should not end in "Data".  So OrderData < ActiveRecord::Base maps to the Order domain 
-model class.
-
 Be aware that your Domain Model test/specs will need to stub/mock out dependencies upon their Repository and other Domain Model objects.  That is, you Domain Model instances will lack fields or associations in their tests. This is because Domain Model objects are [POROs](http://blog.jayfields.com/2007/10/ruby-poro.html) until they are registered with edr at runtime.  As you should not want to test the framework, this should facilitate testing your Domain Model and your persistence in isolation from one another and from the edr framework.
 
 ``` ruby
@@ -79,6 +76,8 @@ end
 ```
 
 ## STEP3: map data objects to domain objects
+
+Domain Model classes should share the same name as the AR classes except they should not end in "Data".  So OrderData < ActiveRecord::Base maps to the Order domain model class.
 
 You probably want the below in a <code>config/initializers/edr.rb</code>
 
