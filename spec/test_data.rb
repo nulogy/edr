@@ -46,6 +46,9 @@ end
 # STEP2: Define domain objects
 # --------------------------------------------------
 class Order
+  def add_item attrs
+    repository.create_item self, attrs
+  end
 end
 
 class Item
