@@ -109,24 +109,20 @@ module OrderRepository
     data(order).reload
     return item
   end
+end
 
-  module ItemRepository
-    extend Edr::AR::Repository
-    set_model_class Item
+module ItemRepository
+  extend Edr::AR::Repository
+  set_model_class Item
 
-    def self.create_item order, attrs
-      item = Item.build(attrs)
-      item.order_id = order.id
-      persist item
-    end
+  def self.create_item order, attrs
+    item = Item.build(attrs)
+    item.order_id = order.id
+    persist item
   end
 end
 ```
 
-
-# STEP5: Profit
-# --------------------------------------------------
-```
 
 ## Installation
 
