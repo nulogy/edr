@@ -3,11 +3,15 @@
 [![Build Status](https://secure.travis-ci.org/elight/edr.png)](http://travis-ci.org/elight/edr)
 [![Code Climate](https://codeclimate.com/github/elight/edr.png)](http://codeclimate.com/elight/edr)
 
-Blog post describing EDR: ["Building Rich Domain Models in Rails. Separating Persistence"](http://engineering.nulogy.com/posts/building-rich-domain-models-in-rails-separating-persistence).
+Blog post describing EDR: ["Building Rich Domain Models in Rails. Separating Persistence"](http://engineering.nulogy.com/posts/building-rich-domain-models-in-rails-separating-persistence) (though this post uses an older and more verbose version of the API).
 
 # Description
 
-Originally named for "Entity, Data, Repository", building on the [Repository pattern](http://martinfowler.com/eaaCatalog/repository.html).
+Originally named for "Entity, Data, Repository", based somewhat on the [Repository pattern](http://martinfowler.com/eaaCatalog/repository.html).  The edr gem separates lookup, persistence, and domain model responsibilities into distinct classes.  
+
+Domain Model classes are defined as "plain old Ruby objects" whose lifecycle is managed through a Repository class.  The Repository creates Domain Model classes on DB reads and persisting them to the DB on saves through an ActiveRecord::Base.  The Repository class can be viewed as a sort of simple [Data Mapper](http://martinfowler.com/eaaCatalog/dataMapper.html), mapping a single database table onto a single Domain Model object.  In this context, the ActiveRecord::Base subclass operates primarily as a [Row Data Gateway](http://martinfowler.com/eaaCatalog/rowDataGateway.html).
+
+Each Domain Model class has a single Repository that uses a single ActiveRecord::Base subclass.
 
 # Example
 
@@ -33,7 +37,7 @@ ActiveRecord::Schema.define(:version => 1) do
 end
 ```
 
-## STEP1: Define data objects
+## STEP1: Define data (Active Record) classes
 ``` ruby
 class OrderData < ActiveRecord::Base
   self.table_name = "orders"
@@ -54,7 +58,7 @@ class ItemData < ActiveRecord::Base
 end
 ```
 
-## STEP2: Define Domain Model
+## STEP2: Define domain model classes
 
 Fields and associations on the Domain Model are determined via ActiveRecord reflection.  The Domain Model is coupled to its ActiveRecord class by naming convention.
 
@@ -76,23 +80,20 @@ end
 
 ## STEP3: map data objects to domain objects
 
-You probably want the below in a config/initializers/edr.rb
+You probably want the below in a <code>config/initializers/edr.rb</code>
 
 ``` ruby
 Edr::Registry.map_models_to_mappers
 ```
 
 
-## STEP4: Define repository to access data
+## STEP4: Define repository classes 
 
-Your Repositories arbitrate persistence on behalf of the Domain Model.
-While it is not ideal for the Domain Model to be aware of the Repository,
-we're stuck with this unless we add a [Unit of Work] reification to
-manage the relationship between the Domain Model and the Repository
+Your Repository class maps ActiveRecord CRUD results onto Domain Model instances.
 
 ``` ruby
 module OrderRepository
-  extend Edr::AR::Repository
+  extend Edr::Repository
 
   set_model_class Order
 
@@ -112,7 +113,7 @@ module OrderRepository
 end
 
 module ItemRepository
-  extend Edr::AR::Repository
+  extend Edr::Repository
   set_model_class Item
 
   def self.create_item order, attrs
@@ -122,9 +123,13 @@ module ItemRepository
   end
 end
 ```
+# Long term
 
+In an ideal world, the Domain Model classes would remain blissfully unaware of their Repositories.  However, associations between Domain Model objects necessitate either awareness of the associated Domain Model class' Repository or arbitration via a [Unit of Work](http://martinfowler.com/eaaCatalog/unitOfWork.html).  While a UoW could be defined/used by edr, this likely will remain beyond the scope of this gem.
 
-## Installation
+It is my hope that, in the near future, we will all instead switch over to using [Datamapper 2](http://github.com/dm-mapper) when it is ready.  However, as of the time of the writing of this README, DM2 is still pre-alpha.
+
+# Installation
 
 Add this line to your application's Gemfile:
 
