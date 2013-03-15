@@ -55,12 +55,7 @@ end
 
 # STEP3: map data objects to domain objects
 # --------------------------------------------------
-Edr::Registry.define do
-#  NOTE: Below should be implicit by naming convention
-#  map Order, OrderData
-#  map Item, ItemData
-end
-
+Edr::Registry.map_models_to_mappers
 
 
 # STEP4: Define repository to access data

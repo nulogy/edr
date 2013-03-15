@@ -26,6 +26,9 @@ module Edr
         next unless Object.const_defined?(model_name)
 
         model_class = Object.const_get(model_name)
+        
+        instrument(model_class, with: o)
+        
         @instance.map(model_class, o)
       end
     end
@@ -57,6 +60,16 @@ module Edr
 
     private
 
+    def self.instrument(model_class, args = {})
+      data_class = args[:with]
+      model_class.send(:include, Edr::Model)
+      model_class.fields(*data_class.attribute_names)
+#      binding.pry
+      model_class.wrap_associations(
+        *data_class.reflect_on_all_associations.map(&:name)
+      )
+    end
+    
     def model_to_data_map
       @model_to_data_map
     end
