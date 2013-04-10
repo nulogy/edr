@@ -8,7 +8,7 @@ module Edr
         data_object.save!
 
         model.id = data_object.id if model.respond_to?(:id)
-        model.send(:repository=, self) if model.respond_to?(:repository)
+        model.send(:repository=, self) if model.respond_to?(:repository, true)
 
         model
       end
