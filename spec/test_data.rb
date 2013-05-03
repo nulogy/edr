@@ -26,16 +26,12 @@ end
 class OrderData < ActiveRecord::Base
   self.table_name = "orders"
 
-  attr_accessible :amount, :deliver_at
-
   validates :amount, numericality: true
   has_many :items, class_name: 'ItemData', foreign_key: 'order_id'
 end
 
 class ItemData < ActiveRecord::Base
   self.table_name = "items"
-
-  attr_accessible :amount, :name
 
   validates :amount, numericality: true
   validates :name, presence: true
