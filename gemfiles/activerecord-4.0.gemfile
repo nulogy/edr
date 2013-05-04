@@ -1,0 +1,8 @@
+source 'https://rubygems.org'
+
+# Specify your gem's dependencies in edr.gemspec
+gemspec path: "../"
+
+gem 'activerecord', '~> 4.0.0.rc1'
+# https://github.com/bmabey/database_cleaner/commit/ce1d16298960c28182568611892bfa4c386cfaf5
+gem 'database_cleaner', github: 'bmabey/database_cleaner', ref: 'ce1d16298960c28182568611892bfa4c386cfaf5'
